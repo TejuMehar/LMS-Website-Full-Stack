@@ -3,12 +3,17 @@ import logo from "../assets/logo.jpg"
 import google from "../assets/google.jpg"
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
-
+import { useNavigate } from "react-router-dom"
 
 
 function SignUp() {
 
    const [show,setShow] = useState(false);
+   const navigate = useNavigate();
+   const [name,setName] = useState("");
+   const [email,setEmail] = useState("");
+   const [password,setPassword] = useState("");
+   const [role,setRole] = useState("student");
 
   return (
     <div className='bg-[#dddbdb] w-[100vw] h-[100vh] flex items-center justify-center'>
@@ -23,23 +28,40 @@ function SignUp() {
            
            <div className='flex flex-col gap-1 w-[80%] items-start justify-center px-3'>
                 <label htmlFor="name" className='font-semibold'>Name</label>
-                <input type="text" id='name' className='border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px]' placeholder=' Enter Your name'/>
+                <input type="text" id='name' className='border-1 w-[100%] h-[35px]
+                 border-[#e7e6e6] text-[15px] px-[20px]' 
+                 placeholder=' Enter Your name' onChange={(e)=>setName(e.target.value)}/>
            </div>
            <div className='flex flex-col gap-1 w-[80%] items-start justify-center px-3'>
                 <label htmlFor="email" className='font-semibold'>Email</label>
-                <input type="text" id='email' className='border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px]' placeholder=' Enter Your email'/>
+                <input type="text" id='email' className='border-1 w-[100%]
+                 h-[35px] border-[#e7e6e6] text-[15px] px-[20px]'
+                  placeholder=' Enter Your email' onChange={(e)=>setEmail(e.target.value)}/>
            </div>
            <div className='flex flex-col gap-1 w-[80%] items-start justify-center px-3 relative'>
                 <label htmlFor="password" className='font-semibold'>Password</label>
-                <input type={show ? "text" : "password"} id='password' className='border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px]' placeholder=' Enter Your password'/>
+                <input type={show ? "text" : "password"} id='password' className='border-1 w-[100%] 
+                h-[35px] border-[#e7e6e6] text-[15px] px-[20px]'
+                 placeholder=' Enter Your password'onChange={(e)=>setPassword(e.target.value)} />
                 { !show ? <FaRegEyeSlash className='absolute w-[20px] h-[20px] curser-pointer right-[5%] bottom-[10%]' onClick={()=>setShow(prev=>!prev)}/>
                  :<FaEye className='absolute w-[20px] h-[20px] curser-pointer right-[5%] bottom-[10%]' onClick={()=>setShow(prev=>!prev)}/> }
            </div>
 
-            <div className='flex md:w-[50%] w-[70%] items-center justify-between gap-4' >
-                 <span className='px-[10px] py-[5px]  border-[1px] border-[#e7e6e6] rounded-2xl cursor-pointer hover:border-black'> Student</span>
-                  <span className='px-[10px] py-[5px] border-[1px] border-[#e7e6e6] rounded-2xl courser-pointer hover:border-[black]' >Educator</span>
-            </div>
+           <div className="flex md:w-[50%] w-[70%] items-center justify-between gap-4">
+             <span
+              className={`px-[10px] py-[5px] border-[1px] rounded-2xl cursor-pointer hover:border-black ${
+              role === "student" ? "border-black" : "border-[#e7e6e6]"
+              }`}
+              onClick={() => setRole("student")}
+            >Student</span>
+
+              <span className={`px-[10px] py-[5px] border-[1px] rounded-2xl cursor-pointer hover:border-black ${
+               role === "educator" ? "border-black" : "border-[#e7e6e6]"
+               }`}
+                onClick={() => setRole("educator")}
+               >Educator</span>
+              </div>
+
 
             <button className='w-[80%] h-[40px] bg-black text-white couser-pointer flex items-center justify-center rounded-[5px]'>SignUp</button>
             
@@ -53,7 +75,10 @@ function SignUp() {
                  <img src={google} alt="google" className='w-[25px] '/>
                  <span className='text-[18px] text-grat-500'>oogle</span>
            </div>
-
+            
+            <div className='text-[#6f6f6f]'>an Already have a Account ?
+              <span className='underline underline-offset-1 text-black' onClick={()=>navigate("/login")}>Login</span>
+            </div>
          </div>
          {/* right div */}
         <div className='md:w-[50%] h-full rounded-r-2xl bg-black md:flex items-center justify-center flex-col hidden'>
