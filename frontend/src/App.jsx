@@ -1,13 +1,20 @@
-import React from 'react'
-import './App.css'
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
+import Home from './pages/Home';
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 
 function App() {
-
   return (
     <>
-      <h1 className='bg-red-500'>Welcome The lms Project </h1>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
