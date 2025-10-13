@@ -5,7 +5,7 @@ import genToken from "../config/token.js"
 
 export const signUp = async(req,res)=>{
    try{
-      const { name, email, password, role} = req.body;
+      const {name,email,password,role} = req.body;
       let existUser = await User.findOne({email});
 
       if(existUser){
@@ -23,12 +23,12 @@ export const signUp = async(req,res)=>{
       const user = await User.create({
         name,
         email,
-        hashPassword,
+        password:hashPassword,
         role
       });
      
       let token = await genToken(user._id);
-      req.cookie("token",token,
+      res.cookie("token",token,
            {
             httpOnly: true,
             secure: false,
@@ -56,7 +56,7 @@ export const login = async(req,res)=>{
         return res.status(400).json({message: "Incorrect Password"});
       }
        let token = await genToken(user._id);
-      req.cookie("token",token,
+      res.cookie("token",token,
            {
             httpOnly: true,
             secure: false,
@@ -66,7 +66,7 @@ export const login = async(req,res)=>{
       )
       return res.status(201).json(user);
     }catch(error){
-        return res.status(5000).json({message: `Login error ${error}`})
+        return res.status(500).json({message: `Login error ${error}`})
     }
 }
 
