@@ -26,11 +26,17 @@ function SignUp() {
           console.log(result.data)
           setLoading(false)
           navigate("/")
-          toast.done("Signup Successfully")
+          toast.success("Signup Successfully",{
+          position: "top-center",
+          autoClose: 3000,
+          })
       }catch(error){
         console.log(error);
         setLoading(false)
-        toast.error(error.responce.data.message)
+        toast.error(error.responce.data.message,{
+          position: "top-center",
+          autoClose: 3000,
+          })
       }
    }
 
@@ -84,7 +90,7 @@ function SignUp() {
 
             <button className='w-[80%] h-[40px] bg-black text-white 
             couser-pointer flex items-center 
-            justify-center rounded-[5px]' onClick={handleSignup} disabled={loading}>{loading ? <ClipLoader size={30} color='white'/>: SignUp}</button>
+            justify-center rounded-[5px]' onClick={handleSignup} disabled={loading}>{loading ? <ClipLoader size={30} color='white'/>: "SignUp"}</button>
             
             <div className='w-[80%] flex items-center gap-2'>
                 <div className='w-[25%] h-[0.5px] bg-[#c4c4c4]'></div>

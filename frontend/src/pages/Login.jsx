@@ -5,15 +5,45 @@ import google from "../assets/google.jpg"
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
+import { serverUrl } from '../App';
+import axios from "axios"
+import { toast } from 'react-toastify';
 
 function Login() {
 
    const [show,setShow] = useState(false);
+   const [email,setEmail] = useState("");
+   const [password,setPassword] = useState("");
+    const [loading,setLoading] = useState(false);
    const navigate = useNavigate();
+
+   const handleLogin = async()=>{
+     setLoading(true);
+     try{
+      const result = await axios.post(serverUrl + "/api/auth/login",
+        { email,password},{ withCridential: true}
+      );
+      console.log(result.data);
+      setLoading(false);
+      toast.success("Login Succesfully",{
+          position: "top-center",
+          autoClose: 3000,
+          });
+      navigate("/");
+     }catch(error){
+       console.log(error);
+       setLoading(false);
+       toast.error(error.responce.data.message,{
+          position: "top-center",
+          autoClose: 3000,
+          });
+     }
+   }
 
   return (
     <div className='bg-[#dddbdb] w-[100vw] h-[100vh] flex items-center justify-center'>
-      <form className='w-[90%] md:w-200 h-150 bg-white shadow-xl rounded-2xl flex'>
+      <form className='w-[90%] md:w-200 h-150 bg-white shadow-xl rounded-2xl flex' onSubmit={(e)=>e.preventDefault()}>
           {/* left div */}
          <div className='md:w-[50%] w-[100%] h-[100%] flex flex-col items-center justify-center gap-3'>
 
@@ -24,16 +54,18 @@ function Login() {
       
            <div className='flex flex-col gap-1 w-[80%] items-start justify-center px-3'>
                 <label htmlFor="email" className='font-semibold'>Email</label>
-                <input type="text" id='email' className='border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px]' placeholder=' Enter Your email'/>
+                <input type="text" id='email' className='border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px]' placeholder=' Enter Your email' onChange={(e)=>setEmail(e.target.value)}/>
            </div>
            <div className='flex flex-col gap-1 w-[80%] items-start justify-center px-3 relative'>
                 <label htmlFor="password" className='font-semibold'>Password</label>
-                <input type={show ? "text" : "password"} id='password' className='border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px]' placeholder=' Enter Your password'/>
+                <input type={show ? "text" : "password"} id='password' className='border-1 w-[100%] h-[35px] border-[#e7e6e6] text-[15px] px-[20px]' placeholder=' Enter Your password' onChange={(e)=>setPassword(e.target.value)}/>
                 { !show ? <FaRegEyeSlash className='absolute w-[20px] h-[20px] curser-pointer right-[5%] bottom-[10%]' onClick={()=>setShow(prev=>!prev)}/>
                  :<FaEye className='absolute w-[20px] h-[20px] curser-pointer right-[5%] bottom-[10%]' onClick={()=>setShow(prev=>!prev)}/> }
            </div>
 
-            <button className='w-[80%] h-[40px] bg-black text-white couser-pointer flex items-center justify-center rounded-[5px]'>Login</button>
+            <button className='w-[80%] h-[40px] bg-black text-white
+             couser-pointer flex items-center justify-center
+              rounded-[5px]'disabled={loading} onClick={handleLogin}>{ loading ? <ClipLoader size={30} color='white'/> : "Login"}</button>
              
              <span className='text-[13px] courser-pointer text-[#585757]' >Forget your Password ? </span>
 
