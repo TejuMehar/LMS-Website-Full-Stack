@@ -3,24 +3,24 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true // ✅ fixed
+    required: true 
   },
   description: {
     type: String
   },
   email: {
     type: String,
-    required: true, // ✅ fixed (was "requyire")
+    required: true, 
     unique: true
   },
   password: {
     type: String,
-    required: true // ✅ correct
+    required: true 
   },
   role: {
     type: String,
     enum: ["student", "educator"],
-    required: true // ✅ fixed
+    required: true 
   },
   photoUrl: {
     type: String,

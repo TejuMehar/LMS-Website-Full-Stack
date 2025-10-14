@@ -4,8 +4,10 @@ import google from "../assets/google.jpg"
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"
-
-
+import axios from "axios"
+import { serverUrl } from '../App';
+import { toast } from 'react-toastify';
+import {ClipLoader} from "react-spinners"
 function SignUp() {
 
    const [show,setShow] = useState(false);
@@ -14,10 +16,27 @@ function SignUp() {
    const [email,setEmail] = useState("");
    const [password,setPassword] = useState("");
    const [role,setRole] = useState("student");
+   const [loading,setLoading] = useState(false)
+   const handleSignup = async()=>{
+
+       setLoading(true)
+      try{
+        const result = await axios.post(serverUrl + "/api/auth/signup",
+          {name,password,email,role },{withCredentials: true}) 
+          console.log(result.data)
+          setLoading(false)
+          navigate("/")
+          toast.done("Signup Successfully")
+      }catch(error){
+        console.log(error);
+        setLoading(false)
+        toast.error(error.responce.data.message)
+      }
+   }
 
   return (
     <div className='bg-[#dddbdb] w-[100vw] h-[100vh] flex items-center justify-center'>
-      <form className='w-[90%] md:w-200 h-150 bg-white shadow-xl rounded-2xl flex'>
+      <form className='w-[90%] md:w-200 h-150 bg-white shadow-xl rounded-2xl flex' onSubmit={(e)=>e.preventDefault()}>
           {/* left div */}
          <div className='md:w-[50%] w-[100%] h-[100%] flex flex-col items-center justify-center gap-3'>
 
@@ -63,7 +82,9 @@ function SignUp() {
               </div>
 
 
-            <button className='w-[80%] h-[40px] bg-black text-white couser-pointer flex items-center justify-center rounded-[5px]'>SignUp</button>
+            <button className='w-[80%] h-[40px] bg-black text-white 
+            couser-pointer flex items-center 
+            justify-center rounded-[5px]' onClick={handleSignup} disabled={loading}>{loading ? <ClipLoader size={30} color='white'/>: SignUp}</button>
             
             <div className='w-[80%] flex items-center gap-2'>
                 <div className='w-[25%] h-[0.5px] bg-[#c4c4c4]'></div>
