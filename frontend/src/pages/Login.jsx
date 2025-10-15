@@ -9,6 +9,8 @@ import { ClipLoader } from 'react-spinners';
 import { serverUrl } from '../App';
 import axios from "axios"
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setUserData } from "../redux/userSlice.js"
 
 function Login() {
 
@@ -17,6 +19,7 @@ function Login() {
    const [password,setPassword] = useState("");
     const [loading,setLoading] = useState(false);
    const navigate = useNavigate();
+   const dispatch = useDispatch();
 
    const handleLogin = async()=>{
      setLoading(true);
@@ -24,7 +27,7 @@ function Login() {
       const result = await axios.post(serverUrl + "/api/auth/login",
         { email,password},{ withCridential: true}
       );
-      console.log(result.data);
+      dispatch(setUserData(result.data));
       setLoading(false);
       toast.success("Login Succesfully",{
           position: "top-center",

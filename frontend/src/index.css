@@ -2,6 +2,21 @@
 
 @import "tailwindcss";
 
-* {
-  font-family: "Outfit";
+
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  /* Only reset margin and padding for specific elements, not all elements */
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Allow Tailwind utilities to work properly */
+  * {
+    box-sizing: border-box;
+  }
 }

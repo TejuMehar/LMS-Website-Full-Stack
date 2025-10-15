@@ -1,9 +1,17 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
 
 function Home() {
   return (
-    <div className='bg-red-500'>
-      <h1>Home Page</h1>
+    <div className='w-[100%] overflow-hidden'>
+      
+      <div>
+        <Navbar/>
+        <div className='pt-20 px-4'>
+          
+        </div>
+      </div>
+
     </div>
   )
 }
