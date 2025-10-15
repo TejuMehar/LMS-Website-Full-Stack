@@ -32,14 +32,14 @@ function SignUp() {
           navigate("/")
           toast.success("Signup Successfully",{
           position: "top-center",
-          autoClose: 3000,
+          autoClose: 2000,
           })
       }catch(error){
         console.log(error);
         setLoading(false)
         toast.error(error.responce.data.message,{
           position: "top-center",
-          autoClose: 3000,
+          autoClose: 2000,
           })
       }
    }

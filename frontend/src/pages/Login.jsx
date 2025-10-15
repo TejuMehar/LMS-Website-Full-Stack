@@ -31,7 +31,7 @@ function Login() {
       setLoading(false);
       toast.success("Login Succesfully",{
           position: "top-center",
-          autoClose: 3000,
+          autoClose: 2000,
           });
       navigate("/");
      }catch(error){
@@ -39,7 +39,7 @@ function Login() {
        setLoading(false);
        toast.error(error.responce.data.message,{
           position: "top-center",
-          autoClose: 3000,
+          autoClose: 2000,
           });
      }
    }
@@ -70,7 +70,7 @@ function Login() {
              couser-pointer flex items-center justify-center
               rounded-[5px]'disabled={loading} onClick={handleLogin}>{ loading ? <ClipLoader size={30} color='white'/> : "Login"}</button>
              
-             <span className='text-[13px] courser-pointer text-[#585757]' >Forget your Password ? </span>
+             <span className='text-[13px] courser-pointer text-[#585757]'onClick={(()=>navigate("/forget"))} >Forget your Password ? </span>
 
             <div className='w-[80%] flex items-center gap-2'>
                 <div className='w-[25%] h-[0.5px] bg-[#c4c4c4]'></div>

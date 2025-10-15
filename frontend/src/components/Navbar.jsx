@@ -45,7 +45,7 @@ const handleLogout = async()=>{
              { !userData && <IoPersonCircle className='w-[50px] h-[50px] fill-black 'onClick={()=>setShow(prev=>!prev)} /> }
               
              {userData &&<div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] 
-             border-2 bg-black border-white cursor-pointer '>
+             border-2 bg-black border-white cursor-pointer ' onClick={()=>setShow(prev=>!prev)}>
                 { userData?.name.slice(0,1).toUpperCase() }
              </div>}
 
@@ -62,7 +62,7 @@ const handleLogout = async()=>{
             { show && <div className='absolute top-[110%] right-[15%] flex items-center flex-col 
              justify-center gap-2 text-[16px] rounded-mg bg-[white] px-[10px] py-[10px] border-[2px] border-black 
              hover:border-white hover:text-white  hover:cursor-pointer hover:bg-black'>
-                 <span className='bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600'>My Profile</span>
+                 <span className='bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600' onClick={()=>navigate("/profile")}>My Profile</span>
                  <span className='bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600'>My Courses</span>
              </div>
             }
@@ -80,7 +80,7 @@ const handleLogout = async()=>{
                     { userData?.name.slice(0,1).toUpperCase() }   </div>}
 
                   <div className='w-[200px] h-[50px] mt-3 border-2 border-white flex flex-center justify-center lg:text-white
-                   bg-black text-white rounded-[5px] text-[18px] font-light cursor-pointer'>
+                   bg-black text-white rounded-[5px] text-[18px] font-light cursor-pointer' onClick={()=>navigate("/profile")}>
                    My Profile
                    </div>
                    <div className='w-[200px] h-[50px] mt-3 border-2 border-white flex flex-center justify-center lg:text-white
