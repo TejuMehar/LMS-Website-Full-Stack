@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/database.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoute.js"
+import userRouter from "./routes/userRoute.js"
 import cors from "cors"
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(cors({origin: "http://localhost:5173", credentials: true }))
 
  
 app.use("/api/auth",authRouter);
+app.use("/api/user",userRouter);
 
 app.get("/",(req,res)=>{
     res.send("Hello From Tejas Mehar");

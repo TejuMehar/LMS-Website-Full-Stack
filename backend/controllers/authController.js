@@ -9,7 +9,7 @@ export const signUp = async(req,res)=>{
       let existUser = await User.findOne({email});
 
       if(existUser){
-        res.status(400).json({message: "User Already Exist!"});
+        return res.status(400).json({message: "User Already Exist!"});
       }
 
       if(!validator.isEmail(email)){
