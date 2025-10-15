@@ -23,7 +23,10 @@ const handleLogout = async()=>{
     try{
       const result = await axios.get(serverUrl + "/api/auth/logout",{ withCredentials: true});
       dispatch(setUserData(null));
-      toast.success("LogOut SuccesFully");
+      toast.success("LogOut SuccesFully",{
+        position: "top-center",
+        autoClose: 2000,
+      });
        navigate("/")
     }catch(error){
      console.log(error);
