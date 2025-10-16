@@ -42,7 +42,7 @@ const handleLogout = async()=>{
             </div>
 
             <div className='w-[30%] lg:flex items-center justify-center gap-4 hidden'>
-             { !userData && <IoPersonCircle className='w-[50px] h-[50px] fill-black 'onClick={()=>setShow(prev=>!prev)} /> }
+             { !userData && <IoPersonCircle className='w-[50px] h-[50px] fill-white border-2 border-white rounded-full 'onClick={()=>setShow(prev=>!prev)} /> }
               
              {userData &&<div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] 
              border-2 bg-black border-white cursor-pointer ' onClick={()=>setShow(prev=>!prev)}>
@@ -50,7 +50,7 @@ const handleLogout = async()=>{
              </div>}
 
              { userData?.role==="educator" &&<div className='px-[20px] py-[10px] border-2 lg:border border-black lg:text-white
-              bg-black text-black rounded-[5px] text-[18px] font-light coursor-pointer'>
+              bg-black text-black  border-2 border-white rounded-[5px] text-[18px] font-light coursor-pointer'>
                 Dashboard
              </div>}
             { !userData ? <span className='px-[20px] py-[10px] border-2 border-white text-white rounded-[5px] 
@@ -67,7 +67,7 @@ const handleLogout = async()=>{
              </div>
             }
             </div>
-            <GiHamburgerMenu className='w-[35px] h-[35px] lg:hidden text-black cursor-pointer' onClick={()=>setShowHam(prev=>!prev)}/>
+            <GiHamburgerMenu className='w-[35px] h-[35px] lg:hidden text-white cursor-pointer' onClick={()=>setShowHam(prev=>!prev)}/>
              <div className={`fixed top-0  left-0 w-[100vw] h-[100vh]  bg-[#000000d6] flex items-center 
              justify-center flex-col z-10
              lg:hidden ${ showHam ? "translate-x-[0] transition duration-600" : "translate-x-[-100%] transition duration-600"}`}>
