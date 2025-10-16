@@ -85,7 +85,6 @@ export const logOut = async(req,res)=>{
 export  const sendOtp = async(req,res)=>{
    try{
         const {email} = req.body;
-
         const user = await User.findOne({email});
 
         if(!user){
@@ -99,7 +98,6 @@ export  const sendOtp = async(req,res)=>{
 
 
        await user.save()
-
        await sendMail(email,otp);
        
        return res.status(200).json({message: "Otp send SuccessFully"});
@@ -110,12 +108,13 @@ export  const sendOtp = async(req,res)=>{
 }
 
 
-export const verifyOtp = asunc(req,res)=>{
+export const verifyOtp = async(req,res)=>{
+ 
   try{
       const {email,otp} =req.body;
 
        const user = await User.findOne({email});
-
+    
        if(!user || user.resetOtp != otp || user.otpExpires < Date.now()){
         return res.status(404).json({message:"Invalid Otp"})
        }
@@ -125,8 +124,8 @@ export const verifyOtp = asunc(req,res)=>{
        user.otpExpires = undefined;
       
       await user.save();
-
-      return res.status(404).json({message: "Otp Verifyed Succesfully"})
+      
+      return res.status(200).json({message: "Otp Verifyed Succesfully"})
      
   }catch(error){
      return  res.status(500).json({message: `Otp verify Error ${error}`})
@@ -151,7 +150,7 @@ export const resetPassword = async(req,res)=>{
 
        await user.save();
 
-      return res.status(404).json({message: "Reset Password Succesfully"})
+      return res.status(200).json({message: "Reset Password Succesfully"})
        
   }catch(error){
    return res.status(500).json({message: `Rest Password Error`});
