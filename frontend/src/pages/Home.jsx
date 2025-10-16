@@ -1,5 +1,6 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
+import home from "../assets/home1.jpg"
 
 function Home() {
   return (
@@ -7,9 +8,7 @@ function Home() {
       
       <div>
         <Navbar/>
-        <div className='pt-20 px-4'>
-          
-        </div>
+       
       </div>
 
     </div>
