@@ -12,24 +12,35 @@ export const getCurrentUser = async(req,res)=>{
   }
 }
 
+export const updateProfile = async (req, res) => {
+  console.log("Uploaded file:", req.file);
+  try {
+    const userId = req.userId;
+    const { description, name } = req.body;
+    let photoUrl;
 
-export const updateProfile = async(req,res)=>{
-  try{
-    const userId = req.userId
-    const {description,name} = req.body;
-    let photoUrl
-    if(req.file){
-      photoUrl = await uploadOnCloudinary(req.file.path)
+       if (req.file) {
+      const filePath = `./public/${req.file.filename}`;  // Construct correct file path
+      const { default: uploadOnCloudinary } = await import("../config/cloudinary.js");
+      photoUrl = await uploadOnCloudinary(filePath);
     }
-    const user = await User.findByIdAndUpdate(userId,{name,description,photoUrl})
 
-    if(!user){
-      return res.status(400).json({message:"User not Found"})
+    const updateData = { name, description };
+    if (photoUrl) updateData.photoUrl = photoUrl; // only include if uploaded
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true } // return updated document
+    );
+
+    if (!user) {
+      return res.status(400).json({ message: "User not Found" });
     }
-      await user.save();
+
     return res.status(200).json(user);
 
-  }catch(error){
-    return res.status(500).json({message: `Update User Error ${error}`})
+  } catch (error) {
+    return res.status(500).json({ message: `Update User Error ${error}` });
   }
-}
+};

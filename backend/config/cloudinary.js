@@ -14,15 +14,29 @@ const uploadOnCloudinary = async(filePath) =>{
         if(!filePath){
             return null;
         }
+        if(!process.env.CLOUDINARY_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_SECRET){
+            console.warn("Cloudinary env variables are not set. Skipping upload.");
+            // optionally remove local file if present
+            if (fs.existsSync(filePath)) {
+              try { fs.unlinkSync(filePath); } catch(e){ /* ignore */ }
+            }
+            return null;
+        }
+
         const uploadResult = await cloudinary.uploader.upload(filePath,{resource_type: "auto"});
-          fs.unlinkSync(filePath);
+        if (fs.existsSync(filePath)) {
+          try { fs.unlinkSync(filePath); } catch(e){ /* ignore */ }
+        }
 
         return uploadResult.secure_url
 
-     }catch(error){
-       fs.unlinkSync(filePath);
-       console.log(error);
-     }
+    }catch(error){
+      if (filePath && fs.existsSync(filePath)) {
+        try { fs.unlinkSync(filePath); } catch(e){ /* ignore */ }
+      }
+      console.log(error);
+      return null;
+    }
 }
 
 
