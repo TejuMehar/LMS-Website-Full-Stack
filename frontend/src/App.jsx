@@ -9,6 +9,7 @@ import { getCurrentUser } from '../../backend/controllers/userController';
 import { useSelector } from 'react-redux';
 import Profile from './pages/Profile';
 import ForgetPassword from './pages/ForgetPassword';
+import EditProfile from './pages/EditProfile';
 export const serverUrl = "http://localhost:8000"
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={userData ? <Profile /> : <Navigate to={"/signup"}/>} />
         <Route path="/forget" element={<ForgetPassword/>}/>
+            <Route path="/editprofile" element={<EditProfile/>}/>
       </Routes>
     </>
   );
