@@ -26,8 +26,11 @@ const EditProfile = () => {
   const handleEdit = async()=>{
     setLoading(true);
     try{
-     const result = await axios.post(serverUrl+"/api/user/updateprofile",formData,{withCredentials:true})
+
+     const result = await axios.post(serverUrl+"/api/user/updateprofile",formData,{ withCredentials: true})
+        console.log(result.data);
      dispatch(setUserData(result.data));
+  
      setLoading(false);   
      navigate("/");
      toast.success("Profile Updated");     
