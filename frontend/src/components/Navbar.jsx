@@ -50,7 +50,7 @@ const handleLogout = async()=>{
              </div>}
 
              { userData?.role==="educator" &&<div className='px-[20px] py-[10px] border-2 lg:border border-black lg:text-white
-              bg-black text-black  border-2 border-white rounded-[5px] text-[18px] font-light coursor-pointer'>
+              bg-black text-black  border-2 border-white rounded-[5px] text-[18px] font-light coursor-pointer'onClick={()=>navigate("/dashboard")}>
                 Dashboard
              </div>}
             { !userData ? <span className='px-[20px] py-[10px] border-2 border-white text-white rounded-[5px] 
@@ -90,7 +90,7 @@ const handleLogout = async()=>{
 
                    {userData?.role === "educator" && (
                     <div className='w-[200px] h-[50px] mt-3 border-2 border-white flex flex-center justify-center  lg:text-white
-                    bg-black text-white rounded-[5px] text-[18px] font-light cursor-pointer'>
+                    bg-black text-white rounded-[5px] text-[18px] font-light cursor-pointer' onClick={()=>navigate("/dashboard")}>
                    Dashboard
                    </div> )}
 
