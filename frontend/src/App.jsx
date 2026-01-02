@@ -5,7 +5,6 @@ import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import {ToastContainer} from "react-toastify"
-import { getCurrentUser } from '../../backend/controllers/userController';
 import { useSelector } from 'react-redux';
 import Profile from './pages/Profile';
 import ForgetPassword from './pages/ForgetPassword';
@@ -14,12 +13,14 @@ import Dashboard from './pages/Educator/Dashboard';
 import Courses from './pages/Educator/Courses';
 import EditCourses from './pages/Educator/EditCourses';
 import CreateCourses from './pages/Educator/CreateCourses';
-import getCreatorCourse from './CustomHooks/getCreatorCourse';
-export const serverUrl = "http://localhost:8000"
+import useGetCurrentUser from './CustomHooks/getCurrentUser';
+
+export const serverUrl = "http://localhost:8000";
+
 
 function App() {
-  getCurrentUser()
-  getCreatorCourse()
+  
+  useGetCurrentUser();
 
   const { userData } = useSelector(state=>state.user);
   return (

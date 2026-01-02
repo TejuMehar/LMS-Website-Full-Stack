@@ -61,15 +61,14 @@ function Login() {
              position: "top-center",
              autoClose: 2000,
              })
-            
+             
           }catch(error){
               toast.error(error.responce.data.message,{
              position: "top-center",
              autoClose: 2000,
-             })
+             })             
           }
       }
-
   return (
     <div className='bg-[#dddbdb] w-[100vw] h-[100vh] flex items-center justify-center'>
       <form className='w-[90%] md:w-200 h-150 bg-white shadow-xl rounded-2xl flex' onSubmit={(e)=>e.preventDefault()}>

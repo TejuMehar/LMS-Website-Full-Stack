@@ -17,18 +17,24 @@ const EditProfile = () => {
   const [loading,setLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const formData = new FormData();
-  formData.append("name",name)
-  formData.append("description",description)
-  formData.append("photoUrl",photoUrl)
-
 
   const handleEdit = async()=>{
     setLoading(true);
     try{
+     const formData = new FormData();
+     formData.append("name",name)
+     formData.append("description",description)
+     if(photoUrl){
+       formData.append("photoUrl",photoUrl)
+     }
 
-     const result = await axios.post(serverUrl+"/api/user/updateprofile",formData,{ withCredentials: true})
-        console.log(result.data);
+     const result = await axios.post(serverUrl+"/api/user/updateprofile",formData,{ 
+       withCredentials: true,
+       headers: {
+         'Content-Type': 'multipart/form-data'
+       }
+     })
+     console.log(result.data);
      dispatch(setUserData(result.data));
   
      setLoading(false);   
@@ -124,7 +130,8 @@ const EditProfile = () => {
                 readOnly
                 type="text"
                 id="email"
-                placeholder={userData?.email || "Enter your email"}
+                value={userData?.email || ""}
+                placeholder="Enter your email"
                 className="w-full mt-1 px-4 py-2 border rounded-md text-sm bg-gray-50 focus:ring-2 focus:ring-black"
               />
             </div>

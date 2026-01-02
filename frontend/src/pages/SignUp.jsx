@@ -24,7 +24,6 @@ function SignUp() {
    const dispatch = useDispatch()
 
    const handleSignup = async()=>{
-
        setLoading(true)
       try{
         const result = await axios.post(serverUrl + "/api/auth/signup",
