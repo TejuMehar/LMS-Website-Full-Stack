@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 const sendMail = async(to,otp)=>{
      await transporter.sendMail({
       from: process.env.USER_EMAIL,
-      to: to ,
+      to: to,
       subject: "Reset your password" ,
       html: `
       <div style="font-family: Arial, sans-serif; background-color: #f4f6f8; padding: 30px;">

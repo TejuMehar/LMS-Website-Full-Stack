@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   },
   photoUrl: {
     type: String,
-    default: " "
+    default: ""
   },
   enrollCourses: [
     {
