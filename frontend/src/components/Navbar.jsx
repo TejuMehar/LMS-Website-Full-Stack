@@ -42,9 +42,10 @@ const handleLogout = async()=>{
             </div>
 
             <div className='w-[30%] lg:flex items-center justify-center gap-4 hidden'>
+            
              { !userData && <IoPersonCircle className='w-[50px] h-[50px] fill-white border-2 border-white rounded-full 'onClick={()=>setShow(prev=>!prev)} /> }
               
-             {userData &&<div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] 
+             {userData?.photoUrl ?  <img src={userData.photoUrl} className='w-[50px] h-[50px] rounded-full object-cover border-2 border-white' /> :<div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] 
              border-2 bg-black border-white cursor-pointer ' onClick={()=>setShow(prev=>!prev)}>
                 { userData?.name.slice(0,1).toUpperCase() }
              </div>}
