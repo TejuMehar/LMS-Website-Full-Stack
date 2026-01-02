@@ -1,6 +1,5 @@
 import User from "../model/userModel.js";
-import uploadOnCloudinary from "../config/cloudinary.js";
-
+import { uploadOnCloudinary } from "../config/cloudinary.js";
 
 export const getCurrentUser = async (req, res) => {
   try {
@@ -19,17 +18,20 @@ export const updateProfile = async (req, res) => {
   try {
     const userId = req.userId;
     const { description, name } = req.body;
-    let photoUrl;
-
+    
+    // Build update object - only include photoUrl if a new file is uploaded
+    const updateData = { name, description };
+    
     if (req.file) {
-      photoUrl = await uploadOnCloudinary(req.file.path);
+      const photoUrl = await uploadOnCloudinary(req.file.path);
+      updateData.photoUrl = photoUrl;
     }
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { name, description, photoUrl },
+      updateData,
       { new: true }
-    );
+    ).select("-password");
 
     if (!user) {
       return res.status(400).json({ message: "User not Found" });
@@ -37,6 +39,7 @@ export const updateProfile = async (req, res) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ message: `Update User Error ${error}` });
+    console.error("Update profile error:", error);
+    return res.status(500).json({ message: `Update User Error ${error.message}` });
   }
 };

@@ -1,4 +1,5 @@
 import Course from "../model/courseModel.js";
+import { uploadOnCloudinary } from "../config/cloudinary.js";
 
 
 
