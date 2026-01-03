@@ -15,11 +15,13 @@ import EditCourses from "./pages/Educator/EditCourses";
 import CreateCourses from "./pages/Educator/CreateCourses";
 import useGetCurrentUser from "./CustomHooks/getCurrentUser";
 import useGetCreatorCourse from "./CustomHooks/getCreatorCourse";
+import useGetPublishedCourse from "./CustomHooks/getCurrentUser";
 export const serverUrl = "http://localhost:8000";
 
 function App() {
   useGetCurrentUser();
   useGetCreatorCourse();
+  useGetPublishedCourse();
 
   const { userData } = useSelector((state) => state.user);
   return (

@@ -7,6 +7,7 @@ import { serverUrl } from "../../App";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import { set } from "mongoose";
 
 function EditCourses() {
   const { courseId } = useParams();
@@ -24,6 +25,7 @@ function EditCourses() {
   const [fontendImage, setFrontendImage] = useState(img);
   const [backendImage, setBackendImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
 
   //To show The Selected Img
   const handleThumbnail = (e) => {
@@ -79,11 +81,11 @@ function EditCourses() {
       const result = await axios.post(
         serverUrl + `/api/course/editcourse/${courseId}`,
         formData,
-        { 
+        {
           withCredentials: true,
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       console.log(result.data);
@@ -100,6 +102,25 @@ function EditCourses() {
         position: "top-center",
         autoClose: 2000,
       });
+    }
+  };
+
+  const handleRemoveCourse = async () => {
+    setLoading1(true);
+    try {
+      const result = await axios.delete(
+        serverUrl + `/api/course/remove/${courseId}`,
+        { withCredentials: true }
+      );
+      console.log(result.data);
+      setLoading1(false);
+      navigate("/courses");
+      toast.success("Course Removed Successfully", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -141,7 +162,10 @@ function EditCourses() {
               Click to UnPublish
             </button>
           )}
-          <button className="bg-red-600 text-white px-4 py-2 rounded-md border-1">
+          <button
+            className="bg-red-600 text-white px-4 py-2 rounded-md border-1"
+            onClick={handleRemoveCourse}
+          >
             Remove Course
           </button>
         </div>
