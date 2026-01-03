@@ -13,9 +13,10 @@ import Dashboard from "./pages/Educator/Dashboard";
 import Courses from "./pages/Educator/Courses";
 import EditCourses from "./pages/Educator/EditCourses";
 import CreateCourses from "./pages/Educator/CreateCourses";
+import AllCourses from "./pages/AllCourses";
 import useGetCurrentUser from "./CustomHooks/getCurrentUser";
 import useGetCreatorCourse from "./CustomHooks/getCreatorCourse";
-import useGetPublishedCourse from "./CustomHooks/getCurrentUser";
+import useGetPublishedCourse from "./CustomHooks/getPublishedCourse";
 export const serverUrl = "http://localhost:8000";
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
         />
         <Route path="/forget" element={<ForgetPassword />} />
         <Route path="/editprofile" element={<EditProfile />} />
+        <Route path="/allcourses" element={ userData ? <AllCourses /> : <Navigate to={"/signup"} />} />
         <Route
           path="/dashboard"
           element={

@@ -1,22 +1,45 @@
 import React from "react";
 import { FaStar } from "react-icons/fa6";
+import empty from "../assets/empty.jpg";
 
-function Card({thumbnail, title, category, price, id }) {
+function Card({ thumbnail, title, subTitle, category, price, level, id }) {
   return (
-    <div className="max-w-sm w-full bg-white rounded-2xl overflow-hidden showdown-md hover:shadow-lg transition-all duration-300 border border-gray-300 ">
-      <img src={thumbnail} alt=""  className="w-full h-48 object-cover " />
-    
-       <div className="p-5 space-y-2">
-            <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-            <span className="px-0 py-0.5  bg-gary-100 rounded-full text-gray-700 capitalize ">{category}</span>
+    <div className="max-w-sm w-full bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-300 cursor-pointer">
+      <img 
+        src={thumbnail || empty} 
+        alt={title || "Course"} 
+        className="w-full h-48 object-cover" 
+        onError={(e) => {
+          e.target.src = empty;
+        }}
+      />
 
-            <div className="flex justify-between text-sm text-gray-600 mt-3 px-[10px]">
-                <span className="font-semibold text-gray-800">₹ {price || "NA"}</span>
-                <span className="flex items-center gap-1 "> <FaStar  className="text-yellow-500"/> 5</span>
-            </div>
+      <div className="p-5 space-y-2">
+        <h2 className="text-lg font-semibold text-gray-900 line-clamp-2">{title}</h2>
+        {subTitle && (
+          <p className="text-sm text-gray-600 line-clamp-2">{subTitle}</p>
+        )}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="px-2 py-0.5 bg-gray-100 rounded-full text-gray-700 capitalize text-xs">
+            {category}
+          </span>
+          {level && (
+            <span className="px-2 py-0.5 bg-blue-100 rounded-full text-blue-700 capitalize text-xs">
+              {level}
+            </span>
+          )}
+        </div>
 
-       </div>
-
+        <div className="flex justify-between items-center text-sm text-gray-600 mt-3">
+          <span className="font-semibold text-gray-800 text-lg">
+            {price ? `₹ ${price}` : "Free"}
+          </span>
+          <span className="flex items-center gap-1">
+            <FaStar className="text-yellow-500" /> 
+            <span>5.0</span>
+          </span>
+        </div>
+      </div>
     </div>
   );
 }

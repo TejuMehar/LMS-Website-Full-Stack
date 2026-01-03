@@ -7,7 +7,9 @@ import { serverUrl } from "../../App";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
-import { set } from "mongoose";
+import { useDispatch } from "react-redux";
+import { setCourseData } from "../../redux/courseSlice";
+import { useSelector } from "react-redux";
 
 function EditCourses() {
   const { courseId } = useParams();
@@ -26,6 +28,9 @@ function EditCourses() {
   const [backendImage, setBackendImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
+  const dispatch = useDispatch();
+  const {courseData} = useSelector((state) => state.course);
+
 
   //To show The Selected Img
   const handleThumbnail = (e) => {
@@ -113,6 +118,10 @@ function EditCourses() {
         { withCredentials: true }
       );
       console.log(result.data);
+      const filteredCourses = courseData.filter(
+        (course) => course._id !== courseId
+      );
+      dispatch(setCourseData(filteredCourses));
       setLoading1(false);
       navigate("/courses");
       toast.success("Course Removed Successfully", {
