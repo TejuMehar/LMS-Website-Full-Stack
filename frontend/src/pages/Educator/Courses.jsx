@@ -5,31 +5,34 @@ import empty from "../../assets/empty.jpg";
 import { FaEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { serverUrl } from "../../App";
-import axios from "axios"
-import { setCreatorCourseData} from "../../redux/courseSlice.js"
+import axios from "axios";
+import { setCreatorCourseData } from "../../redux/courseSlice.js";
 
 function Courses() {
   const navigate = useNavigate();
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-   const { userData} = useSelector(state=>state.user);
+  const { userData } = useSelector((state) => state.user);
   const { creatorCourseData } = useSelector((state) => state.course);
-  
- useEffect(() => {
-  const creatorCourses = async () => {
-    try {
-      const result = await axios.get(serverUrl + "/api/course/getCreatorCourses", {
-        withCredentials: true
-      });
-      console.log(result.data);
-      dispatch(setCreatorCourseData(result.data));
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  creatorCourses();
-}, [userData]); 
+  useEffect(() => {
+    const creatorCourses = async () => {
+      try {
+        const result = await axios.get(
+          serverUrl + "/api/course/getCreatorCourses",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(result.data);
+        dispatch(setCreatorCourseData(result.data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    creatorCourses();
+  }, [userData]);
 
   return (
     <div className="flex min-h-screen bg-gray-100 ">
@@ -98,7 +101,10 @@ function Courses() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <FaEdit className="text-gray-600 hover:text-blue-600 cursor-pointer w-10 h-5" onClick={()=>navigate(`/editcourse/${course?._id}`)} />
+                    <FaEdit
+                      className="text-gray-600 hover:text-blue-600 cursor-pointer w-10 h-5"
+                      onClick={() => navigate(`/editcourse/${course?._id}`)}
+                    />
                   </td>
                 </tr>
               ))}
@@ -128,7 +134,10 @@ function Courses() {
                     ₹ {course.price || "NA"}
                   </p>
                 </div>
-                <FaEdit className="text-gray-600 hover:text-blue-600 cursor-pointer w-10 h-5" />
+                <FaEdit
+                  className="text-gray-600 hover:text-blue-600 cursor-pointer w-10 h-5"
+                  onClick={() => navigate(`/editcourse/${course?._id}`)}
+                />
               </div>
               <span
                 className={`w-fit px-3 py-1 text-xs rounded-full ${
