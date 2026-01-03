@@ -1,10 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import ai from "../assets/SearchAi.png";
+import { useSelector } from "react-redux";
+import Card from "../components/Card";
+
 function AllCourses() {
   const navigate = useNavigate();
+  const { courseData } = useSelector((state) => state.course);
+  const [category, setCategory] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
+
+  const toggleCategory = (e) => {
+    if (category.includes(e.target.value)) {
+      setCategory((prev) => prev.filter((c) => c !== e.target.value));
+    } else {
+      setCategory((prev) => [...prev, e.target.value]);
+    }
+  };
+
+  const applyFilters = () => {
+    let courseCopy = courseData?.slice();
+    if (category.length > 0) {
+      courseCopy = courseCopy.filter((course) =>
+        category.includes(course.category)
+      );
+    }
+    setFilteredCourses(courseCopy);
+  };
+
+  useEffect(() => {
+    setFilteredCourses(courseData);
+  }, [courseData]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [category]);
+
   return (
     <div className="flex min-h-screen bg-gray-50 ">
       <Navbar />
@@ -36,8 +69,10 @@ function AllCourses() {
             <input
               type="checkbox"
               className="accent-black w-4 h-4 rounded-md"
+              onChange={toggleCategory}
+              value={"App Development"}
             />{" "}
-            App Developement
+            App Development
           </label>
 
           {/* AI/ML */}
@@ -48,6 +83,8 @@ function AllCourses() {
             <input
               type="checkbox"
               className="accent-black w-4 h-4 rounded-md"
+              onChange={toggleCategory}
+              value={"AI/ML"}
             />{" "}
             AI/ML
           </label>
@@ -60,6 +97,8 @@ function AllCourses() {
             <input
               type="checkbox"
               className="accent-black w-4 h-4 rounded-md"
+              onChange={toggleCategory}
+              value={"AI Tools"}
             />{" "}
             AI Tools
           </label>
@@ -72,6 +111,8 @@ function AllCourses() {
             <input
               type="checkbox"
               className="accent-black w-4 h-4 rounded-md"
+              onChange={toggleCategory}
+              value={"Data Science"}
             />{" "}
             Data Science
           </label>
@@ -84,6 +125,8 @@ function AllCourses() {
             <input
               type="checkbox"
               className="accent-black w-4 h-4 rounded-md"
+              onChange={toggleCategory}
+              value={"Data Analytics"}
             />{" "}
             Data Analytics
           </label>
@@ -96,6 +139,8 @@ function AllCourses() {
             <input
               type="checkbox"
               className="accent-black w-4 h-4 rounded-md"
+              onChange={toggleCategory}
+              value={"Ethical Hacking"}
             />{" "}
             Ethical Hacking
           </label>
@@ -108,6 +153,8 @@ function AllCourses() {
             <input
               type="checkbox"
               className="accent-black w-4 h-4 rounded-md"
+              onChange={toggleCategory}
+              value={"UI/UX Designing"}
             />{" "}
             UI/UX Designing
           </label>
@@ -120,6 +167,8 @@ function AllCourses() {
             <input
               type="checkbox"
               className="accent-black w-4 h-4 rounded-md"
+              onChange={toggleCategory}
+              value={"Web Developement"}
             />{" "}
             Web Development
           </label>
@@ -132,11 +181,27 @@ function AllCourses() {
             <input
               type="checkbox"
               className="accent-black w-4 h-4 rounded-md"
+              onChange={toggleCategory}
+              value={"Other"}
             />{" "}
             Other
           </label>
         </form>
       </aside>
+
+      <main className="w-full transition-all duration-300 py-[130px] md:pl-[300px] flex items-start justify-center md:justify-start flex-wrap gap-6 px-[10px]">
+        {filteredCourses?.map((course, index) => (
+          <Card
+            thumbnail={course.thumbnail}
+            title={course.title}
+            subTitle={course.subTitle}
+            category={course.category}
+            price={course.price}
+            level={course.level}
+            id={course._id}
+          />
+        ))}
+      </main>
     </div>
   );
 }
