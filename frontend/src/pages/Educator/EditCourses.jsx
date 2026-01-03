@@ -5,10 +5,13 @@ import img from "../../assets/empty.jpg";
 import { FaEdit } from "react-icons/fa";
 import { serverUrl } from "../../App";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 function EditCourses() {
+  const { courseId } = useParams();
+  console.log("courseId", courseId);
   const navigate = useNavigate();
-  const { courseID } = useParams();
   const [isPublished, setIsPublished] = useState(false);
   const thumb = useRef(null);
   const [seletedCourse, setSelectedCourse] = useState(null);
@@ -20,7 +23,7 @@ function EditCourses() {
   const [price, setPrice] = useState("");
   const [fontendImage, setFrontendImage] = useState(img);
   const [backendImage, setBackendImage] = useState(null);
-
+  const [loading, setLoading] = useState(false);
 
   //To show The Selected Img
   const handleThumbnail = (e) => {
@@ -32,7 +35,7 @@ function EditCourses() {
   const getCourseById = async () => {
     try {
       const result = await axios.get(
-        serverUrl + `/api/course/getcourse/${courseID}`,
+        serverUrl + `/api/course/getcoursebyid/${courseId}`,
         { withCredentials: true }
       );
       setSelectedCourse(result.data);
@@ -42,8 +45,63 @@ function EditCourses() {
   };
 
   useEffect(() => {
+    if (seletedCourse) {
+      setTitle(seletedCourse.title || "");
+      setSubTitle(seletedCourse.subTitle || "");
+      setDescription(seletedCourse.description || "");
+      setCategory(seletedCourse.category || "");
+      setLevel(seletedCourse.level || "");
+      setPrice(seletedCourse.price || "");
+      setIsPublished(seletedCourse?.isPublished || false);
+      setFrontendImage(seletedCourse.thumbnail || img);
+    }
+  }, [seletedCourse]);
+
+  useEffect(() => {
     getCourseById();
   }, []);
+
+  const handleEditCourse = async () => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("subTitle", subTitle);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("level", level);
+    formData.append("price", price);
+    formData.append("isPublished", isPublished);
+    if (backendImage) {
+      formData.append("thumbnail", backendImage);
+    }
+
+    try {
+      const result = await axios.post(
+        serverUrl + `/api/course/editcourse/${courseId}`,
+        formData,
+        { 
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+      console.log(result.data);
+      setLoading(false);
+      navigate("/courses");
+      toast.success("Course Updated Successfully", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      toast.error(err.response?.data?.message || "Failed to update course", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-6 mt-10 bg-white rounded-lg shadow-md">
@@ -101,7 +159,9 @@ function EditCourses() {
               type="text"
               id="title"
               className="w-full border px-4 py-2 rounded-md"
-              placeholder="CourseTitle"
+              placeholder={seletedCourse?.title || "Course Title"}
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
             />
           </div>
 
@@ -118,6 +178,8 @@ function EditCourses() {
               id="subtitle"
               className="w-full border px-4 py-2 rounded-md"
               placeholder="CourseSubtitle"
+              onChange={(e) => setSubTitle(e.target.value)}
+              value={subTitle}
             />
           </div>
           {/* description */}
@@ -133,6 +195,8 @@ function EditCourses() {
               id="dis"
               className="w-full border px-4 py-2 rounded-md h-24 resize-none"
               placeholder="CourseDescription"
+              onChange={(e) => setDescription(e.target.value)}
+              value={description}
             />
           </div>
 
@@ -150,6 +214,8 @@ function EditCourses() {
                 name=""
                 id=""
                 className="w-full border px-4 py-2 rounded-md"
+                onChange={(e) => setCategory(e.target.value)}
+                value={category}
               >
                 <option value="">Select Category</option>
                 <option value="App Developement">App Developement</option>
@@ -178,6 +244,8 @@ function EditCourses() {
                 name=""
                 id=""
                 className="w-full border px-4 py-2 rounded-md"
+                onChange={(e) => setLevel(e.target.value)}
+                value={level}
               >
                 <option value="">Select Level</option>
                 <option value="Beginner">Beginner</option>
@@ -200,6 +268,8 @@ function EditCourses() {
                 id="price"
                 className="w-full border px-4 py-2 rounded-md"
                 placeholder="₹"
+                onChange={(e) => setPrice(e.target.value)}
+                value={price}
               />
             </div>
           </div>
@@ -240,8 +310,11 @@ function EditCourses() {
             >
               cancel
             </button>
-            <button className="bg-black text-white px-7 py-2 rounded-md hover:bg-gray-500 cursor-pointer ">
-              save
+            <button
+              className="bg-black text-white px-7 py-2 rounded-md hover:bg-gray-500 cursor-pointer "
+              onClick={handleEditCourse}
+            >
+              {loading ? <ClipLoader size={30} color="white" /> : "Save"}
             </button>
           </div>
         </form>
