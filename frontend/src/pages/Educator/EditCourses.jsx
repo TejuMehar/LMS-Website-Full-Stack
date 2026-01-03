@@ -1,13 +1,49 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import img from "../../assets/empty.jpg";
 import { FaEdit } from "react-icons/fa";
+import { serverUrl } from "../../App";
+import axios from "axios";
 
 function EditCourses() {
   const navigate = useNavigate();
+  const { courseID } = useParams();
   const [isPublished, setIsPublished] = useState(false);
   const thumb = useRef(null);
+  const [seletedCourse, setSelectedCourse] = useState(null);
+  const [title, setTitle] = useState("");
+  const [subTitle, setSubTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [level, setLevel] = useState("");
+  const [price, setPrice] = useState("");
+  const [fontendImage, setFrontendImage] = useState(img);
+  const [backendImage, setBackendImage] = useState(null);
+
+
+  //To show The Selected Img
+  const handleThumbnail = (e) => {
+    const file = e.target.files[0];
+    setBackendImage(file);
+    setFrontendImage(URL.createObjectURL(file));
+  };
+
+  const getCourseById = async () => {
+    try {
+      const result = await axios.get(
+        serverUrl + `/api/course/getcourse/${courseID}`,
+        { withCredentials: true }
+      );
+      setSelectedCourse(result.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getCourseById();
+  }, []);
 
   return (
     <div className="max-w-5xl mx-auto p-6 mt-10 bg-white rounded-lg shadow-md">
@@ -174,12 +210,18 @@ function EditCourses() {
             >
               Course Thumbnail
             </label>
-            <input type="file" hidden ref={thumb} accept="image/*" />
+            <input
+              type="file"
+              hidden
+              ref={thumb}
+              accept="image/*"
+              onChange={handleThumbnail}
+            />
           </div>
 
           <div className="relative w-[300px] h-[170px]">
             <img
-              src={img}
+              src={fontendImage || img}
               alt=""
               onClick={() => thumb.current.click()}
               className="w-[100%] h-[100%] border-1 border-black 
