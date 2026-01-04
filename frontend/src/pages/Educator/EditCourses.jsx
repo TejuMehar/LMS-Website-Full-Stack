@@ -29,8 +29,7 @@ function EditCourses() {
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
   const dispatch = useDispatch();
-  const {courseData} = useSelector((state) => state.course);
-
+  const { courseData } = useSelector((state) => state.course);
 
   //To show The Selected Img
   const handleThumbnail = (e) => {
@@ -146,8 +145,11 @@ function EditCourses() {
         </h2>
 
         <div className="space-x-2 space-y-2">
-          <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800">
-            Go to Lacture Page
+          <button
+            className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
+            onClick={() => navigate(`/createlecture/${seletedCourse?._id}`)}
+          >
+            Go to Lecture Page
           </button>
         </div>
       </div>

@@ -17,6 +17,7 @@ import AllCourses from "./pages/AllCourses";
 import useGetCurrentUser from "./CustomHooks/getCurrentUser";
 import useGetCreatorCourse from "./CustomHooks/getCreatorCourse";
 import useGetPublishedCourse from "./CustomHooks/getPublishedCourse";
+import CreateLecture from "./pages/Educator/CreateLecture";
 export const serverUrl = "http://localhost:8000";
 
 function App() {
@@ -41,7 +42,10 @@ function App() {
         />
         <Route path="/forget" element={<ForgetPassword />} />
         <Route path="/editprofile" element={<EditProfile />} />
-        <Route path="/allcourses" element={ userData ? <AllCourses /> : <Navigate to={"/signup"} />} />
+        <Route
+          path="/allcourses"
+          element={userData ? <AllCourses /> : <Navigate to={"/signup"} />}
+        />
         <Route
           path="/dashboard"
           element={
@@ -77,6 +81,16 @@ function App() {
           element={
             userData?.role === "educator" ? (
               <EditCourses />
+            ) : (
+              <Navigate to={"/signup"} />
+            )
+          }
+        />
+        <Route
+          path="/createlecture/:courseId"
+          element={
+            userData?.role === "educator" ? (
+              <CreateLecture />
             ) : (
               <Navigate to={"/signup"} />
             )

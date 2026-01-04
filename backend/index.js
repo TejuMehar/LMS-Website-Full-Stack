@@ -18,7 +18,7 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/course", courseRouter);
-app.use("/api/lacture", lactureRouter);
+app.use("/api/lecture", lactureRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello From Tejas Mehar");

@@ -43,12 +43,19 @@ function AllCourses() {
     <div className="flex min-h-screen bg-gray-50 ">
       <Navbar />
 
-      <button className="fixed top-20 left-2 z-40 bg-white text-black px-3 py-1 rounded-lg md:hidden border-2  border-black" onClick={()=>setIsSidebarVisible(prev=> !prev)}>
-        {isSidebarVisible ? "Hide Filters" : "Show Filters"} 
+      <button
+        className="fixed top-20 left-2 z-40 bg-white text-black px-3 py-1 rounded-lg md:hidden border-2  border-black"
+        onClick={() => setIsSidebarVisible((prev) => !prev)}
+      >
+        {isSidebarVisible ? "Hide Filters" : "Show Filters"}
       </button>
 
       {/* sidebar */}
-      <aside className={`w-[260px] h-screen overflow-y-auto bg-black fixed top-0 left-0 p-6 py-[130px] border-r border-gray-200 shadow-md transition-transform duration-300 z-5 ${isSidebarVisible ? 'translate-x-0' : '-translate-x-full' } md:block md:translate-x-0`}>
+      <aside
+        className={`w-[260px] h-screen overflow-y-auto bg-black fixed top-0 left-0 p-6 py-[130px] border-r border-gray-200 shadow-md transition-transform duration-300 z-5 ${
+          isSidebarVisible ? "translate-x-0" : "-translate-x-full"
+        } md:block md:translate-x-0`}
+      >
         <h2 className="text-xl font-bold flex items-center justify-center gap-5 text-gray-50 mb-6">
           <IoMdArrowRoundBack
             className="text-white"
@@ -195,7 +202,7 @@ function AllCourses() {
       </aside>
 
       <main className="w-full transition-all duration-300 py-[130px] md:pl-[300px] flex items-start justify-center md:justify-start flex-wrap gap-6 px-[10px]">
-        {filteredCourses?.map((course, index) => (
+        {filteredCourses?.map((course) => (
           <Card
             thumbnail={course.thumbnail}
             title={course.title}
