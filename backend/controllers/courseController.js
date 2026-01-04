@@ -58,7 +58,6 @@ export const editCourses = async (req, res) => {
   try {
     const { courseId } = req.params;
 
-    console.log("courseId", courseId);
     const {
       title,
       subTitle,
