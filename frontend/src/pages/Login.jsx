@@ -45,8 +45,7 @@ function Login() {
      }
    }
 
-   
-      const GoogleLogin = async()=>{
+   const GoogleLogin = async()=>{
      
           try{
             const response = await signInWithPopup(auth,provider);
@@ -69,6 +68,8 @@ function Login() {
              })             
           }
       }
+
+
   return (
     <div className='bg-[#dddbdb] w-[100vw] h-[100vh] flex items-center justify-center'>
       <form className='w-[90%] md:w-200 h-150 bg-white shadow-xl rounded-2xl flex' onSubmit={(e)=>e.preventDefault()}>

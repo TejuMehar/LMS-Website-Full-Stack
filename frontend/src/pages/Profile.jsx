@@ -42,7 +42,6 @@ const Profile = () => {
                  <span  className='text-sm'>Enrolled Courses:</span>
                  <span className='font-semibold text-gray-700'>{userData.enrollCourses.length}</span>
            </div>
-          
          </div>
       
          <div className='mt-6  flex justify-center gap-4 '>

@@ -17,10 +17,17 @@ export const signUp = async (req, res) => {
       return res.status(400).json({ message: "Enter Valid Email!" });
     }
 
-    if (password.length < 4) {
-      return res.status(400).json({ message: "Enter Strong Password!" });
+    if (
+      password.length < 6 ||
+      !/[A-Za-z]/.test(password) ||
+      !/[0-9]/.test(password)
+    ) {
+      return res.status(400).json({
+        message:
+          "Password must contain letters and numbers and be at least 6 characters long",
+      });
     }
-    
+
     let hashPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       name,
@@ -36,8 +43,8 @@ export const signUp = async (req, res) => {
       sameSite: "Lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    
-    return res.status(201).json(user);
+
+   return res.status(201).json(user);
   } catch (error) {
     return res.status(500).json({ message: `SignUp error ${error}` });
   }
@@ -65,6 +72,7 @@ export const login = async (req, res) => {
       sameSite: "Strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    
     return res.status(201).json(user);
   } catch (error) {
     return res.status(500).json({ message: `Login error ${error}` });
@@ -79,8 +87,6 @@ export const logOut = async (req, res) => {
     return res.status(500).json({ message: `LogOut Error ${error}` });
   }
 };
-
-
 
 export const sendOtp = async (req, res) => {
   try {
