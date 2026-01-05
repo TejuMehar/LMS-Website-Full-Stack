@@ -18,6 +18,7 @@ import useGetCurrentUser from "./CustomHooks/getCurrentUser";
 import useGetCreatorCourse from "./CustomHooks/getCreatorCourse";
 import useGetPublishedCourse from "./CustomHooks/getPublishedCourse";
 import CreateLecture from "./pages/Educator/CreateLecture";
+import EditlLecture from "./pages/Educator/EditlLecture";
 export const serverUrl = "http://localhost:8000";
 
 function App() {
@@ -91,6 +92,16 @@ function App() {
           element={
             userData?.role === "educator" ? (
               <CreateLecture />
+            ) : (
+              <Navigate to={"/signup"} />
+            )
+          }
+        />
+        <Route
+          path="/editlecture/:courseId/:lectureId"
+          element={
+            userData?.role === "educator" ? (
+              <EditlLecture />
             ) : (
               <Navigate to={"/signup"} />
             )
