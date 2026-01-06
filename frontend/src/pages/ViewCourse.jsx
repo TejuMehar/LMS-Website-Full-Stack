@@ -11,6 +11,7 @@ import { FaLock } from "react-icons/fa";
 import { serverUrl } from "../App";
 import axios from "axios";
 import Card from "../components/Card";
+import { toast } from "react-toastify";
 
 const commonCourseFeatures = [
   "Lifetime access to course",
@@ -26,6 +27,7 @@ function ViewCourse() {
   const dispatch = useDispatch();
   const { courseId } = useParams();
   const { courseData } = useSelector((state) => state.course);
+  const { userData } = useSelector((state) => state.user);
   const { selectedCourse } = useSelector((state) => state.course);
   const [selectedLecture, setSelectedLecture] = useState(null);
   const [creatorData, setCreatorData] = useState(null);
@@ -72,6 +74,91 @@ function ViewCourse() {
   useEffect(() => {
     fetchCourse();
   }, [courseData, courseId]);
+
+  const handleEnroll = async (userId, courseId) => {
+    try {
+      // Create Razorpay order
+      const orderData = await axios.post(
+        serverUrl + "/api/order/razorpayorder",
+        { courseId, userId },
+        { withCredentials: true }
+      );
+      const order = orderData.data;
+
+      // Razorpay options
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Razorpay key from backend
+        amount: order.amount,
+        currency: order.currency,
+        name: selectedCourse?.title || "Course Enrollment",
+        description: `Enrollment for ${selectedCourse?.title}`,
+        order_id: order.id,
+        handler: async function (response) {
+          // Payment successful - verify payment
+          try {
+            const verifyResult = await axios.post(
+              serverUrl + "/api/order/verifypayment",
+              {
+                ...response,
+                courseId,
+                userId,
+                // razorpay_order_id: response.razorpay_order_id,
+                // razorpay_payment_id: response.razorpay_payment_id,
+                // razorpay_signature: response.razorpay_signature,
+              },
+              { withCredentials: true }
+            );
+
+            toast.success(
+              verifyResult.data.message ||
+                "Payment successful! You are now enrolled.",
+              {
+                position: "top-center",
+                autoClose: 3000,
+              }
+            );
+
+            // Refresh page or update state
+            window.location.reload();
+          } catch (error) {
+            console.error("Payment verification error:", error);
+            toast.error(
+              error.response?.data?.message || "Payment verification failed",
+              {
+                position: "top-center",
+                autoClose: 3000,
+              }
+            );
+          }
+        },
+        prefill: {
+          name: userData?.name || "",
+          email: userData?.email || "",
+        },
+        theme: {
+          color: "#000000",
+        },
+        modal: {
+          ondismiss: function () {
+            toast.info("Payment cancelled", {
+              position: "top-center",
+              autoClose: 2000,
+            });
+          },
+        },
+      };
+
+      // Open Razorpay payment window
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (err) {
+      console.error("Enrollment error:", err);
+      toast.error(err.response?.data?.message || "Failed to initiate payment", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -122,7 +209,10 @@ function ViewCourse() {
                 ))}
               </ul>
               {/* enrolled now */}
-              <button className="bg-[black] text-white px-6 py-2 rounded hover:bg-gray-700 mt-3">
+              <button
+                className="bg-[black] text-white px-6 py-2 rounded hover:bg-gray-700 mt-3"
+                onClick={() => handleEnroll(userData._id, courseId)}
+              >
                 Enroll Now
               </button>
             </div>
@@ -255,25 +345,33 @@ function ViewCourse() {
               className="w-16 h-16 rounded-full object-cover"
             />
           )}
-             <div>
-              <h2 className="text-lg font-semibold ">{creatorData?.name}</h2>
-              <p className="mg:text-sm text-gray-600 text-[13px]">{creatorData?.description}</p>
-              <p className="mg:text-sm text-gray-600 text-[11px]">{creatorData?.email}</p>
-             </div>
+          <div>
+            <h2 className="text-lg font-semibold ">{creatorData?.name}</h2>
+            <p className="mg:text-sm text-gray-600 text-[13px]">
+              {creatorData?.description}
+            </p>
+            <p className="mg:text-sm text-gray-600 text-[11px]">
+              {creatorData?.email}
+            </p>
+          </div>
         </div>
 
-            <div>
-              <p>Other Published Courses By the Educator - </p>
-            </div>
+        <div>
+          <p>Other Published Courses By the Educator - </p>
+        </div>
 
-            <div className="w-full transection-all duration-300 py-[20px] flex items-center justify-center lg:justify-start flex-wrap gap-6 lg:px-[80px]">
-                  {
-                    creatorCourses?.map((course,index)=>(
-                      <Card thumbnail={course.thumbnail} id={course._id} price={course.price} category={course.category} title={course.title} key={index}/>
-                    ))
-                  }
-            </div>
-
+        <div className="w-full transection-all duration-300 py-[20px] flex items-center justify-center lg:justify-start flex-wrap gap-6 lg:px-[80px]">
+          {creatorCourses?.map((course, index) => (
+            <Card
+              thumbnail={course.thumbnail}
+              id={course._id}
+              price={course.price}
+              category={course.category}
+              title={course.title}
+              key={index}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
