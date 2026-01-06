@@ -19,6 +19,8 @@ import useGetCreatorCourse from "./CustomHooks/getCreatorCourse";
 import useGetPublishedCourse from "./CustomHooks/getPublishedCourse";
 import CreateLecture from "./pages/Educator/CreateLecture";
 import EditlLecture from "./pages/Educator/EditlLecture";
+import ViewCourse from "./pages/ViewCourse";
+import ScrollToTop from "./components/ScrollToTop";
 export const serverUrl = "http://localhost:8000";
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
   return (
     <>
       <ToastContainer />
+      <ScrollToTop/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
@@ -106,6 +109,10 @@ function App() {
               <Navigate to={"/signup"} />
             )
           }
+        />
+        <Route
+          path="/viewcourse/:courseId"
+          element={ <ViewCourse />}
         />
       </Routes>
     </>

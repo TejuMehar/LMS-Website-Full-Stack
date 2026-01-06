@@ -2,6 +2,7 @@ import express from "express";
 import {
   createCourse,
   getCourseById,
+  getCreator,
   getCreatorCourses,
   getPublishedCourses,
   removeCourse,
@@ -24,5 +25,6 @@ router.post(
 );
 router.get("/getcoursebyid/:courseId", isAuth, getCourseById);
 router.delete("/remove/:courseId", isAuth, removeCourse);
+router.post("/getcreator",isAuth,getCreator)
 
 export default router;
