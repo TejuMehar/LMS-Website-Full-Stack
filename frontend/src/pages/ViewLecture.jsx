@@ -26,8 +26,7 @@ function ViewLecture() {
   useEffect(() => {
     // Check if user is enrolled
     const isEnrolled = userData?.enrollCourses?.some(
-      (c) =>
-        (typeof c === "string" ? c : c._id).toString() === courseId?.toString(),
+      (c) => (typeof c === "string" ? c : c._id).toString() === courseId?.toString()
     );
 
     if (!isEnrolled) {
@@ -71,7 +70,7 @@ function ViewLecture() {
   const handleLectureSelect = (lecture, index) => {
     setCurrentLecture(lecture);
     setCurrentLectureIndex(index);
-    setShowSidebar(false); // Close sidebar on mobile after selection
+    setShowSidebar(false);
   };
 
   const handleNextLecture = () => {
@@ -97,11 +96,7 @@ function ViewLecture() {
   };
 
   if (!selectedCourse) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
   return (
@@ -122,11 +117,10 @@ function ViewLecture() {
       </div>
 
       <div className="flex">
-        {/* Sidebar - Lecture List */}
+        {/* Sidebar */}
         <div className={`${
           showSidebar ? 'fixed inset-0 z-50 lg:relative lg:inset-auto' : 'hidden'
         } lg:block w-full lg:w-80 bg-white shadow-lg h-screen overflow-y-auto`}>
-          {/* Mobile Close Button */}
           <div className="lg:hidden p-4 border-b flex justify-end">
             <IoClose
               className="w-6 h-6 cursor-pointer"
@@ -176,7 +170,7 @@ function ViewLecture() {
             ))}
           </div>
 
-          {/* Creator Info in Sidebar */}
+          {/* Creator Info */}
           {creatorData && (
             <div className="p-4 border-t">
               <h3 className="text-sm font-semibold text-gray-800 mb-3">Instructor</h3>
@@ -205,11 +199,10 @@ function ViewLecture() {
           )}
         </div>
 
-        {/* Main Content - Video Player */}
+        {/* Main Content */}
         <div className="flex-1 p-4 lg:p-6">
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              {/* Video Player */}
               <div className="aspect-video bg-black">
                 {currentLecture?.videoUrl ? (
                   <video
@@ -225,12 +218,11 @@ function ViewLecture() {
                 )}
               </div>
 
-              {/* Lecture Info */}
               <div className="p-4 lg:p-6">
                 <h1 className="text-xl lg:text-2xl font-bold text-gray-800 mb-2">
                   {currentLecture?.lectureTitle}
                 </h1>
-
+                
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
                   <button
                     className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 disabled:opacity-50"
@@ -241,23 +233,18 @@ function ViewLecture() {
                   </button>
 
                   <span className="text-gray-600 text-sm lg:text-base">
-                    {currentLectureIndex + 1} of{" "}
-                    {selectedCourse.lectures?.length}
+                    {currentLectureIndex + 1} of {selectedCourse.lectures?.length}
                   </span>
 
                   <button
                     className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                     onClick={handleNextLecture}
-                    disabled={
-                      currentLectureIndex ===
-                      selectedCourse.lectures?.length - 1
-                    }
+                    disabled={currentLectureIndex === selectedCourse.lectures?.length - 1}
                   >
                     Next
                   </button>
                 </div>
 
-                {/* Mark as Complete Button */}
                 <div className="mt-4">
                   {!completedLectures.includes(currentLecture?._id) && (
                     <button
@@ -268,37 +255,6 @@ function ViewLecture() {
                     </button>
                   )}
                 </div>
-
-                {/* Creator Info on Mobile */}
-                {creatorData && (
-                  <div className="lg:hidden mt-6 p-4 bg-gray-50 rounded-lg">
-                    <h3 className="text-sm font-semibold text-gray-800 mb-3">About the Instructor</h3>
-                    <div className="flex items-center gap-3">
-                      {creatorData.photoUrl ? (
-                        <img
-                          src={creatorData.photoUrl}
-                          className="w-12 h-12 rounded-full object-cover"
-                          alt={creatorData.name}
-                        />
-                      ) : (
-                        <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center text-lg font-bold">
-                          {creatorData.name?.slice(0, 1).toUpperCase()}
-                        </div>
-                      )}
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-800">
-                          {creatorData.name}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {creatorData.role}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {creatorData.email}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
