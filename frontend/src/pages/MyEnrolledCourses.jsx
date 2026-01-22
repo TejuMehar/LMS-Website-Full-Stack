@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { IoMdArrowRoundBack } from 'react-icons/io';
-import { FaStar, FaPlay, FaBook, FaClock } from 'react-icons/fa';
-import Navbar from '../components/Navbar';
-import empty from '../assets/empty.jpg';
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { FaStar, FaPlay, FaBook, FaClock } from "react-icons/fa";
+import Navbar from "../components/Navbar";
+import empty from "../assets/empty.jpg";
+import { serverUrl } from "../App";
 
 function MyEnrolledCourses() {
   const { userData } = useSelector((state) => state.user);
@@ -14,8 +15,8 @@ function MyEnrolledCourses() {
 
   useEffect(() => {
     if (userData?.enrollCourses && courseData) {
-      const enrolled = courseData.filter(course => 
-        userData.enrollCourses.includes(course._id)
+      const enrolled = courseData.filter((course) =>
+        userData.enrollCourses.includes(course._id),
       );
       setEnrolledCourses(enrolled);
     }
@@ -28,12 +29,12 @@ function MyEnrolledCourses() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Navbar />
-      
+
       <div className="container mx-auto px-4 py-8 mt-16">
         <div className="flex items-center gap-4 mb-8">
           <IoMdArrowRoundBack
             className="text-gray-700 w-8 h-8 cursor-pointer hover:text-black transition-colors"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
           />
           <div>
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
@@ -52,12 +53,14 @@ function MyEnrolledCourses() {
                 <FaBook className="text-blue-600 w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-gray-800">{enrolledCourses.length}</h3>
+                <h3 className="text-2xl font-bold text-gray-800">
+                  {enrolledCourses.length}
+                </h3>
                 <p className="text-gray-600">Courses Enrolled</p>
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center gap-4">
               <div className="bg-green-100 p-3 rounded-full">
@@ -65,13 +68,16 @@ function MyEnrolledCourses() {
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-gray-800">
-                  {enrolledCourses.reduce((total, course) => total + (course.lectures?.length || 0), 0)}
+                  {enrolledCourses.reduce(
+                    (total, course) => total + (course.lectures?.length || 0),
+                    0,
+                  )}
                 </h3>
                 <p className="text-gray-600">Total Lectures</p>
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center gap-4">
               <div className="bg-purple-100 p-3 rounded-full">
@@ -94,7 +100,11 @@ function MyEnrolledCourses() {
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={course.thumbnail || empty}
+                    src={
+                      course.thumbnail
+                        ? `${serverUrl}/${course.thumbnail}`
+                        : empty
+                    }
                     alt={course.title}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                     onError={(e) => {
@@ -115,11 +125,11 @@ function MyEnrolledCourses() {
                       {course.category}
                     </span>
                   </div>
-                  
+
                   <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
                     {course.title}
                   </h3>
-                  
+
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                     {course.subTitle || course.description}
                   </p>
@@ -141,7 +151,10 @@ function MyEnrolledCourses() {
                       <span>0%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: '0%' }}></div>
+                      <div
+                        className="bg-blue-600 h-2 rounded-full"
+                        style={{ width: "0%" }}
+                      ></div>
                     </div>
                   </div>
 
@@ -165,10 +178,11 @@ function MyEnrolledCourses() {
               No Courses Enrolled Yet
             </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              Start your learning journey by exploring our wide range of courses and enroll in the ones that interest you.
+              Start your learning journey by exploring our wide range of courses
+              and enroll in the ones that interest you.
             </p>
             <button
-              onClick={() => navigate('/allcourses')}
+              onClick={() => navigate("/allcourses")}
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
             >
               Explore Courses
