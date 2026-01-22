@@ -1,5 +1,5 @@
 import Course from "../model/courseModel.js";
-import Review from "../model/reviewModel";
+import Review from "../model/reviewModel.js";
 export const createReview = async (req, res) => {
   try {
     const { rating, comment, courseId } = req.body;
@@ -40,12 +40,29 @@ export const createReview = async (req, res) => {
   }
 };
 
+export const getReviews = async (req, res) => {
+  try {
+    const reviews = (
+      await Review.find({}).populate("user", "name photoUrl role")
+    ).sort({ reviewedAt: -1 });
+    return res.status(200).json({ reviews });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: `Error while fetching reviews ${err.message}` });
+  }
+};
 
-export const getReviews = async (req,res)=>{
-    try{
-        const reviews = (await Review.find({}).populate('user',"name, photoUrl , role ")).sort({reviewedAt : -1 })
-       return res.status(200).json({reviews});
-    }catch(err){
-        return res.status(500).json({message: `Error while fetching reviews ${err.message}`})
-    }
-}
+export const getCourseReviews = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const reviews = await Review.find({ course: courseId })
+      .populate("user", "name photoUrl role")
+      .sort({ reviewedAt: -1 });
+    return res.status(200).json({ reviews });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: `Error while fetching course reviews ${err.message}` });
+  }
+};

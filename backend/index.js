@@ -7,6 +7,7 @@ import userRouter from "./routes/userRoute.js";
 import courseRouter from "./routes/courseRoute.js";
 import lactureRouter from "./routes/lactureRoute.js";
 import paymentRouter from "./routes/paymentRoute.js";
+import reviewRouter from "./routes/reviewRoute.js";
 import cors from "cors";
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use("/api/user", userRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/lecture", lactureRouter);
 app.use("/api/order", paymentRouter);
+app.use("/api/review", reviewRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello From Tejas Mehar");

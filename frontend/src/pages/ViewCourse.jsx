@@ -11,6 +11,7 @@ import { serverUrl } from "../App";
 import axios from "axios";
 import Card from "../components/Card";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 const commonCourseFeatures = [
   "Lifetime access to course",
@@ -31,6 +32,10 @@ function ViewCourse() {
   const [selectedLecture, setSelectedLecture] = useState(null);
   const [creatorCourses, setCreatorCourses] = useState();
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchCourse = async () => {
     courseData?.forEach((course) => {
@@ -82,7 +87,19 @@ function ViewCourse() {
   useEffect(() => {
     fetchCourse();
     checkEnrollment();
+    fetchReviews();
   }, [courseData, courseId, userData]);
+
+  const fetchReviews = async () => {
+    try {
+      const result = await axios.get(
+        serverUrl + `/api/review/course/${courseId}`
+      );
+      setReviews(result.data.reviews);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleEnroll = async (userId, courseId) => {
     if (!userId) {
@@ -173,6 +190,31 @@ function ViewCourse() {
       toast.error("Failed to initiate payment", {
         position: "top-center",
         autoClose: 3000,
+      });
+    }
+  };
+
+  const handleReview = async () => {
+    setLoading(true);
+    try {
+      await axios.post(
+        serverUrl + "/api/review/createreview",
+        { rating, comment, courseId },
+        { withCredentials: true },
+      );
+      setLoading(false);
+      toast.success("Review Added Successfully", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      setRating(0);
+      setComment("");
+      fetchReviews();
+    } catch (err) {
+      setLoading(false);
+      toast.error(err.response?.data?.message || "Failed to add review", {
+        position: "top-center",
+        autoClose: 2000,
       });
     }
   };
@@ -325,6 +367,95 @@ function ViewCourse() {
           </div>
         </div>
 
+        {/* Review Section */}
+        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">
+            Write a Review
+          </h2>
+
+          <div className="mb-4">
+            <p className="text-gray-700 mb-2">Rate this course:</p>
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar
+                  key={star}
+                  className={`text-2xl cursor-pointer transition-colors ${
+                    star <= rating ? "text-yellow-500" : "text-gray-300"
+                  }`}
+                  onClick={() => setRating(star)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Your Review:</label>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              placeholder="Share your thoughts about this course..."
+              rows={4}
+            />
+          </div>
+
+          <button
+            className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+            onClick={handleReview}
+            disabled={loading}
+          >
+            {loading ? <ClipLoader size={20} color="white" /> : "Submit Review"}
+          </button>
+        </div>
+
+        {/* Display Reviews */}
+        {reviews.length > 0 && (
+          <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              Course Reviews ({reviews.length})
+            </h2>
+            <div className="space-y-4">
+              {reviews.map((review) => (
+                <div key={review._id} className="border-b border-gray-200 pb-4 last:border-b-0">
+                  <div className="flex items-start gap-4">
+                    {review.user?.photoUrl ? (
+                      <img
+                        src={review.user.photoUrl}
+                        className="w-12 h-12 rounded-full object-cover"
+                        alt={review.user.name}
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-gray-600 text-white flex items-center justify-center font-bold">
+                        {review.user?.name?.slice(0, 1).toUpperCase()}
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="font-semibold text-gray-800">{review.user?.name}</h4>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <FaStar
+                              key={star}
+                              className={`text-sm ${
+                                star <= review.rating ? "text-yellow-500" : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {new Date(review.reviewedAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-gray-700">{review.comment}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Creator Info */}
         {creatorData && (
           <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
             <h3 className="text-xl font-bold mb-4 text-gray-800">
@@ -354,6 +485,7 @@ function ViewCourse() {
           </div>
         )}
 
+        {/* More Courses by Creator */}
         {creatorCourses && creatorCourses.length > 0 && (
           <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
             <h3 className="text-xl font-bold mb-4 text-gray-800">
