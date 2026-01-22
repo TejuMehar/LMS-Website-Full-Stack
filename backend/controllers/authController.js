@@ -88,6 +88,7 @@ export const logOut = async (req, res) => {
   }
 };
 
+
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
@@ -132,6 +133,7 @@ export const verifyOtp = async (req, res) => {
     return res.status(500).json({ message: `Otp verify Error ${error}` });
   }
 };
+
 
 export const resetPassword = async (req, res) => {
   try {

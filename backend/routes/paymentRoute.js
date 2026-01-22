@@ -3,10 +3,11 @@ import {
   RazorpayOrder,
   verifyPayment,
 } from "../controllers/orderController.js";
+import isAuth from "../middleware/isAuth.js";
 
 const router = express.Router();
 
-router.post("/razorpayorder", RazorpayOrder);
-router.post("/verifypayment", verifyPayment);
+router.post("/razorpayorder", isAuth, RazorpayOrder);
+router.post("/verifypayment", isAuth, verifyPayment);
 
 export default router;

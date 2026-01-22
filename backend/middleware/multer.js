@@ -5,7 +5,7 @@ const storage = multer.diskStorage({
     cb(null, "./public"); // make sure ./public exists
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // safer unique filename
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 

@@ -1,21 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-
-@import "tailwindcss";
-
-
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import 'react-toastify/dist/ReactToastify.css';
 
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
   }
   
-  /* Only reset margin and padding for specific elements, not all elements */
   html, body {
     margin: 0;
     padding: 0;
+    font-family: 'Outfit', sans-serif;
   }
   
-  /* Allow Tailwind utilities to work properly */
   * {
     box-sizing: border-box;
   }

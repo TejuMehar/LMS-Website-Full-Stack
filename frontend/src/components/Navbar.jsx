@@ -110,7 +110,10 @@ const Navbar = () => {
               >
                 My Profile
               </span>
-              <span className="bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600">
+              <span
+                className="bg-black text-white px-[30px] py-[10px] rounded-2xl hover:bg-gray-600"
+                onClick={() => navigate("/mycourses")}
+              >
                 My Courses
               </span>
             </div>
@@ -162,6 +165,7 @@ const Navbar = () => {
           <div
             className="w-[200px] h-[50px] mt-3 border-2 border-white flex flex-center justify-center lg:text-white
                    bg-black text-white rounded-[5px] text-[18px] font-light cursor-pointer"
+            onClick={() => navigate("/mycourses")}
           >
             My Courses
           </div>
