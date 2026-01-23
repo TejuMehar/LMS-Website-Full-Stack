@@ -40,11 +40,11 @@ export const signUp = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "Lax",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-   return res.status(201).json(user);
+    return res.status(201).json(user);
   } catch (error) {
     return res.status(500).json({ message: `SignUp error ${error}` });
   }
@@ -69,10 +69,10 @@ export const login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "Strict",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    
+
     return res.status(201).json(user);
   } catch (error) {
     return res.status(500).json({ message: `Login error ${error}` });
@@ -87,7 +87,6 @@ export const logOut = async (req, res) => {
     return res.status(500).json({ message: `LogOut Error ${error}` });
   }
 };
-
 
 export const sendOtp = async (req, res) => {
   try {
@@ -134,7 +133,6 @@ export const verifyOtp = async (req, res) => {
   }
 };
 
-
 export const resetPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -175,8 +173,8 @@ export const googleAuth = async (req, res) => {
     let token = await genToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Strict",
+      secure: true,
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(201).json(user);
