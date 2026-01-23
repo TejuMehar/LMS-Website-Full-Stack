@@ -24,7 +24,7 @@ import ViewCourse from "./pages/ViewCourse";
 import ViewLecture from "./pages/ViewLecture";
 import ScrollToTop from "./components/ScrollToTop";
 import SearchWithAi from "./pages/searchWithAi";
-export const serverUrl = "http://localhost:8000";
+export const serverUrl = "https://lms-website-full-stack.onrender.com";
 
 function App() {
   useGetCurrentUser();
