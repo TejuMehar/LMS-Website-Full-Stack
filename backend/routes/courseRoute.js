@@ -11,6 +11,7 @@ import isAuth from "../middleware/isAuth.js";
 import upload from "../middleware/multer.js";
 import { get } from "mongoose";
 import { editCourses } from "../controllers/courseController.js";
+import { searchWithAi } from "../controllers/searchController.js";
 
 const router = express.Router();
 
@@ -21,10 +22,13 @@ router.post(
   "/editcourse/:courseId",
   isAuth,
   upload.single("thumbnail"),
-  editCourses
+  editCourses,
 );
 router.get("/getcoursebyid/:courseId", isAuth, getCourseById);
 router.delete("/remove/:courseId", isAuth, removeCourse);
-router.post("/getcreator",isAuth,getCreator)
+router.post("/getcreator", isAuth, getCreator);
+
+// for Search
+router.post("/search", searchWithAi);
 
 export default router;

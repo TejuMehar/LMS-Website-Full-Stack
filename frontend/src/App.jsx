@@ -23,6 +23,7 @@ import MyEnrolledCourses from "./pages/MyEnrolledCourses";
 import ViewCourse from "./pages/ViewCourse";
 import ViewLecture from "./pages/ViewLecture";
 import ScrollToTop from "./components/ScrollToTop";
+import SearchWithAi from "./pages/searchWithAi";
 export const serverUrl = "http://localhost:8000";
 
 function App() {
@@ -120,6 +121,10 @@ function App() {
         <Route
           path="/mycourses"
           element={userData ? <MyEnrolledCourses /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/searchwithai"
+          element={userData ? <SearchWithAi /> : <Navigate to="/login" />}
         />
       </Routes>
     </>

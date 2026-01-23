@@ -54,6 +54,7 @@ function Home() {
           <button
             className="px-[20px] py-[10px] bg-white  border-2 lg:border-white border-black lg:text-black  text-black rounded-[10px] 
             text-[18px] font-light flex gap-2 cursor-pointer "
+            onClick={() => navigate("/searchwithai")}
           >
             Search With Ai
             <img

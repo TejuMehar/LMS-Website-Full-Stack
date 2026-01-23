@@ -12,6 +12,7 @@ import axios from "axios";
 import Card from "../components/Card";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
 const commonCourseFeatures = [
   "Lifetime access to course",
@@ -36,6 +37,9 @@ function ViewCourse() {
   const [comment, setComment] = useState("");
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [editingReview, setEditingReview] = useState(null);
+  const [editRating, setEditRating] = useState(0);
+  const [editComment, setEditComment] = useState("");
 
   const fetchCourse = async () => {
     courseData?.forEach((course) => {
@@ -93,7 +97,7 @@ function ViewCourse() {
   const fetchReviews = async () => {
     try {
       const result = await axios.get(
-        serverUrl + `/api/review/course/${courseId}`
+        serverUrl + `/api/review/course/${courseId}`,
       );
       setReviews(result.data.reviews);
     } catch (err) {
@@ -213,6 +217,52 @@ function ViewCourse() {
     } catch (err) {
       setLoading(false);
       toast.error(err.response?.data?.message || "Failed to add review", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const handleUpdateReview = async (reviewId) => {
+    setLoading(true);
+    try {
+      await axios.put(
+        serverUrl + `/api/review/update/${reviewId}`,
+        { rating: editRating, comment: editComment },
+        { withCredentials: true },
+      );
+      setLoading(false);
+      toast.success("Review Updated Successfully", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      setEditingReview(null);
+      setEditRating(0);
+      setEditComment("");
+      fetchReviews();
+    } catch (err) {
+      setLoading(false);
+      toast.error(err.response?.data?.message || "Failed to update review", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm("Are you sure you want to delete this review?")) return;
+
+    try {
+      await axios.delete(serverUrl + `/api/review/delete/${reviewId}`, {
+        withCredentials: true,
+      });
+      toast.success("Review Deleted Successfully", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      fetchReviews();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete review", {
         position: "top-center",
         autoClose: 2000,
       });
@@ -416,7 +466,10 @@ function ViewCourse() {
             </h2>
             <div className="space-y-4">
               {reviews.map((review) => (
-                <div key={review._id} className="border-b border-gray-200 pb-4 last:border-b-0">
+                <div
+                  key={review._id}
+                  className="border-b border-gray-200 pb-4 last:border-b-0"
+                >
                   <div className="flex items-start gap-4">
                     {review.user?.photoUrl ? (
                       <img
@@ -430,23 +483,137 @@ function ViewCourse() {
                       </div>
                     )}
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h4 className="font-semibold text-gray-800">{review.user?.name}</h4>
-                        <div className="flex gap-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <FaStar
-                              key={star}
-                              className={`text-sm ${
-                                star <= review.rating ? "text-yellow-500" : "text-gray-300"
-                              }`}
-                            />
-                          ))}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-semibold text-gray-800">
+                            {review.user?.name}
+                          </h4>
+                          <div className="flex gap-1">
+                            {editingReview === review._id
+                              ? // Edit mode stars
+                                [1, 2, 3, 4, 5].map((star) => (
+                                  <FaStar
+                                    key={star}
+                                    className={`text-lg cursor-pointer ${
+                                      star <= editRating
+                                        ? "text-yellow-500"
+                                        : "text-gray-300"
+                                    }`}
+                                    onClick={() => setEditRating(star)}
+                                  />
+                                ))
+                              : // Display mode stars
+                                [1, 2, 3, 4, 5].map((star) => (
+                                  <FaStar
+                                    key={star}
+                                    className={`text-sm ${
+                                      star <= review.rating
+                                        ? "text-yellow-500"
+                                        : "text-gray-300"
+                                    }`}
+                                  />
+                                ))}
+                          </div>
+                          <span className="text-sm text-gray-500">
+                            {new Date(review.reviewedAt).toLocaleDateString()}
+                          </span>
                         </div>
-                        <span className="text-sm text-gray-500">
-                          {new Date(review.reviewedAt).toLocaleDateString()}
-                        </span>
+
+                        {/* Edit/Delete buttons for own reviews */}
+                        {review.user?._id === userData?._id && (
+                          <div className="flex gap-2">
+                            {editingReview === review._id ? (
+                              <>
+                                <button
+                                  onClick={() => handleUpdateReview(review._id)}
+                                  disabled={loading}
+                                  className="
+    px-4 py-2 text-sm font-medium text-white
+    bg-gradient-to-r from-green-500 to-emerald-600
+    rounded-lg shadow-md
+    hover:from-green-600 hover:to-emerald-700
+    focus:outline-none focus:ring-2 focus:ring-green-400
+    disabled:opacity-50 disabled:cursor-not-allowed
+    transition-all duration-200
+  "
+                                >
+                                  {loading ? "Updating..." : "Update"}
+                                  Save
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setEditingReview(null);
+                                    setEditRating(0);
+                                    setEditComment("");
+                                  }}
+                                  className="
+    px-4 py-2 text-sm font-medium
+    text-gray-600
+    bg-gray-100
+    rounded-lg
+    hover:bg-gray-200 hover:text-gray-800
+    focus:outline-none focus:ring-2 focus:ring-gray-300
+    transition-all duration-200
+  "
+                                >
+                                  Cancel
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  onClick={() => {
+                                    setEditingReview(review._id);
+                                    setEditRating(review.rating);
+                                    setEditComment(review.comment);
+                                  }}
+                                  className="
+      inline-flex items-center gap-1
+      px-3 py-1.5 text-sm font-medium
+      text-blue-600
+      bg-blue-50
+      rounded-full
+      hover:bg-blue-100 hover:text-blue-700
+      focus:outline-none focus:ring-2 focus:ring-blue-300
+      transition-all
+    "
+                                >
+                                  <FiEdit2 className="text-sm" />
+                                  Edit
+                                </button>
+
+                                <button
+                                  onClick={() => handleDeleteReview(review._id)}
+                                  className="
+      inline-flex items-center gap-1
+      px-3 py-1.5 text-sm font-medium
+      text-red-600
+      bg-red-50
+      rounded-full
+      hover:bg-red-100 hover:text-red-700
+      focus:outline-none focus:ring-2 focus:ring-red-300
+      transition-all
+    "
+                                >
+                                  <FiTrash2 className="text-sm" />
+                                  Delete
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <p className="text-gray-700">{review.comment}</p>
+
+                      {editingReview === review._id ? (
+                        <textarea
+                          value={editComment}
+                          onChange={(e) => setEditComment(e.target.value)}
+                          className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                          rows={3}
+                        />
+                      ) : (
+                        <p className="text-gray-700">{review.comment}</p>
+                      )}
                     </div>
                   </div>
                 </div>

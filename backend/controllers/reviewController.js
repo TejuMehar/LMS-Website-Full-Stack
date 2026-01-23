@@ -66,3 +66,51 @@ export const getCourseReviews = async (req, res) => {
       .json({ message: `Error while fetching course reviews ${err.message}` });
   }
 };
+
+export const updateReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const { rating, comment } = req.body;
+    const userId = req.userId;
+
+    const review = await Review.findById(reviewId);
+    if (!review) return res.status(404).json({ message: "Review not found" });
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).json({ message: "Not authorized to update this review" });
+    }
+
+    review.rating = rating;
+    review.comment = comment;
+    await review.save();
+
+    return res.status(200).json({ message: "Review updated successfully", review });
+  } catch (err) {
+    return res.status(500).json({ message: `Failed to update review ${err.message}` });
+  }
+};
+
+export const deleteReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const userId = req.userId;
+
+    const review = await Review.findById(reviewId);
+    if (!review) return res.status(404).json({ message: "Review not found" });
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).json({ message: "Not authorized to delete this review" });
+    }
+
+    await Review.findByIdAndDelete(reviewId);
+    
+    // Remove review from course
+    await Course.findByIdAndUpdate(review.course, {
+      $pull: { reviews: reviewId }
+    });
+
+    return res.status(200).json({ message: "Review deleted successfully" });
+  } catch (err) {
+    return res.status(500).json({ message: `Failed to delete review ${err.message}` });
+  }
+};
