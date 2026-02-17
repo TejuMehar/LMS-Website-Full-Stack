@@ -42,6 +42,7 @@ export const signUp = async (req, res) => {
       secure: true,
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
 
     return res.status(201).json(user);
@@ -71,6 +72,7 @@ export const login = async (req, res) => {
       secure: true,
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
 
     return res.status(201).json(user);
@@ -81,8 +83,13 @@ export const login = async (req, res) => {
 
 export const logOut = async (req, res) => {
   try {
-    await res.clearCookie("token");
-    return res.status(200).json({ message: ` User LogOut Successfully` });
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
+    return res.status(200).json({ message: " User LogOut Successfully" });
   } catch (error) {
     return res.status(500).json({ message: `LogOut Error ${error}` });
   }
@@ -177,6 +184,7 @@ export const googleAuth = async (req, res) => {
       secure: true,
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
     return res.status(201).json(user);
   } catch (error) {
