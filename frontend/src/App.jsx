@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
+import { ClipLoader } from "react-spinners";
 import Profile from "./pages/Profile";
 import ForgetPassword from "./pages/ForgetPassword";
 import EditProfile from "./pages/EditProfile";
@@ -31,7 +32,16 @@ function App() {
   useGetCreatorCourse();
   useGetPublishedCourse();
 
-  const { userData } = useSelector((state) => state.user);
+  const { userData, authChecked } = useSelector((state) => state.user);
+
+  if (!authChecked) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-100">
+        <ClipLoader size={50} color="#000" />
+      </div>
+    );
+  }
+
   return (
     <>
       <ToastContainer />
